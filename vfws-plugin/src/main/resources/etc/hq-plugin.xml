@@ -1,5 +1,234 @@
 <?xml version="1.0"?>
 
-<plugin package="com.vmware.vfabric.hyperic.plugin" name="vfws">
+<plugin package="com.vmware.vfabric.hyperic.plugin.vfws" name="vfws">
+    <property name="PLUGIN_VERSION" value="@project.version@"/>
+    
+    <classpath>
+        <include name="pdk/plugins/netservices-plugin.jar"/>
+    </classpath>
+    
+    <filter name="template"
+          value="${vfws-server.template}:${alias}"/>
+    
+    <metrics name="vfws-server">
+        <metric name="Availability"
+            indicator="true"/>
 
+        <metric name="Server Uptime"
+            alias="ServerUptimeSeconds"
+            category="Availability"/>
+            
+        <metric name="Busy Workers"
+            defaultOn="true"/>
+
+        <metric name="Idle Workers"
+            defaultOn="true"/>
+
+        <metric name="Bytes Served per Second"
+            alias="KilobytesPerSec"
+            category="THROUGHPUT"
+            units="KB"/>
+
+        <metric name="Bytes Served per Request"
+            alias="KilobytesPerReq"
+            category="THROUGHPUT"
+            units="KB"/>
+
+        <metric name="Requests Served per Second"
+            alias="ReqPerSec"
+            indicator="true"
+            category="THROUGHPUT"/>
+
+        <metric name="Requests Served"
+            alias="TotalAccesses"
+            indicator="true"
+            collectionType="trendsup"
+            category="THROUGHPUT"/>
+
+        <metric name="Bytes Served"
+            alias="TotalTrafficKilobytes"
+            units="KB"
+            indicator="true"
+            collectionType="trendsup"
+            category="THROUGHPUT"/>
+            
+        <metric name="Parent Server Generation"
+            category="THROUGHPUT"/>    
+            
+    </metrics>
+
+    <filter name="template"
+          value="${vfws-vhost.template}:${alias}"/>
+    
+    <metrics name="vfws-vhost">
+        <metric name="Availability"
+            indicator="true"/>
+
+        <metric name="Start Elapsed"
+            units="mu"
+            defaultOn="true"
+            category="Availability"/>
+
+        <metric name="Start Time"
+            units="epoch-millis"
+            defaultOn="true"
+            category="Availability"/>
+
+        <metric name="In Bytes GET"
+            indicator="true"
+            defaultOn="true"
+            category="THROUGHPUT"/>
+            
+        <metric name="In Bytes HEAD"
+            indicator="true"
+            defaultOn="true"
+            category="THROUGHPUT"/>
+            
+        <metric name="In Bytes POST"
+            indicator="true"
+            defaultOn="true"
+            category="THROUGHPUT"/>
+            
+        <metric name="In Bytes PUT"
+            defaultOn="true"
+            indicator="true"
+            category="THROUGHPUT"/>
+            
+        <metric name="In Requests GET"
+            indicator="true"
+            defaultOn="true"
+            category="THROUGHPUT"/>
+            
+        <metric name="In Requests HEAD"
+            indicator="true"
+            defaultOn="true"
+            category="THROUGHPUT"/>
+            
+        <metric name="In Requests POST"
+            defaultOn="true"
+            indicator="true"
+            category="THROUGHPUT"/>
+            
+        <metric name="In Requests PUT"
+            defaultOn="true"
+            indicator="true"
+            category="THROUGHPUT"/>
+            
+        <metric name="Out Bytes 200"
+            defaultOn="true"
+            indicator="true"
+            category="THROUGHPUT"/>
+            
+        <metric name="Out Bytes 301"
+            defaultOn="true"
+            indicator="true"
+            category="THROUGHPUT"/>
+            
+        <metric name="Out Bytes 302"
+            indicator="true"
+            defaultOn="true"
+            category="THROUGHPUT"/>
+            
+        <metric name="Out Bytes 403"
+            indicator="true"
+            defaultOn="true"
+            category="THROUGHPUT"/>
+            
+        <metric name="Out Bytes 404"
+            indicator="true"
+            defaultOn="true"
+            category="THROUGHPUT"/>
+            
+        <metric name="Out Bytes 500"
+            defaultOn="true"
+            indicator="true"
+            category="THROUGHPUT"/>
+            
+        <metric name="Out Responses 200"
+            indicator="true"
+            defaultOn="true"
+            category="THROUGHPUT"/>
+            
+        <metric name="Out Responses 301"
+            indicator="true"
+            defaultOn="true"
+            category="THROUGHPUT"/>
+                        
+        <metric name="Out Responses 302"
+            indicator="true"
+            defaultOn="true"
+            category="THROUGHPUT"/>
+            
+        <metric name="Out Responses 401"
+            indicator="true"
+            defaultOn="true"
+            category="THROUGHPUT"/>
+            
+        <metric name="Out Responses 403"
+            indicator="true"
+            defaultOn="true"
+            category="THROUGHPUT"/>
+            
+        <metric name="Out Responses 404"
+            defaultOn="true"
+            indicator="true"
+            category="THROUGHPUT"/>
+                        
+        <metric name="Out Responses 500"
+            defaultOn="true"
+            indicator="true"
+            category="THROUGHPUT"/>
+            
+        <metric name="In Low Bytes"
+            defaultOn="true"
+            indicator="true"
+            category="THROUGHPUT"/>
+            
+        <metric name="In Requests"
+            indicator="true"
+            defaultOn="true"
+            category="THROUGHPUT"/>
+            
+        <metric name="Out Responses"
+            indicator="true"
+            defaultOn="true"
+            category="THROUGHPUT"/>
+    </metrics>
+
+    
+    <config name="vfws-server">
+        <option name="process.query" description="ptql" default="State.Name.re=httpd.prefork"/>
+        <option name="hostname" description="Hostname" default="localhost"/>
+        <option name="port" description="Port" default="80"/>
+        <option name="path" description="Path" default="/bmx?query=mod_bmx_status:Name=ServerStatus,Type=Normal"/>
+        <option name="ssl" description="Use SSL" type="boolean" optional="true" default="false"/>
+    </config>
+
+    <config name="vfws-vhost">
+        <option name="hostname" description="Hostname" default="localhost"/>
+        <option name="port" description="Port" default="80"/>
+        <option name="path" description="Path" default="/bmx?query=mod_bmx_vhost:Type=since-start,Host=%replaceme%,Port=%replaceme%"/>
+        <option name="ssl" description="Use SSL" type="boolean" optional="true" default="false"/>
+    </config>
+    
+    <server name="vFabric Web Server"
+        version="5.1">
+        <plugin type="measurement" class="org.hyperic.hq.product.MeasurementPlugin"/>
+        <plugin type="collector" class="VfwsCollector"/>
+        
+        <config include="vfws-server"/>
+        
+        <metrics include="vfws-server"/>
+        
+        <service name="Virtual Host">
+            <plugin type="measurement" class="org.hyperic.hq.product.MeasurementPlugin"/>
+            <plugin type="collector" class="VfwsCollector"/>
+            
+            <config include="vfws-vhost"/>
+        
+            <metrics include="vfws-vhost"/>
+            
+        </service>
+        
+    </server>
 </plugin>
