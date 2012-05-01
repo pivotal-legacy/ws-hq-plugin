@@ -13,8 +13,18 @@
 		<dependency>
 			<groupId>org.hyperic.hq</groupId>
 			<artifactId>hq-pdk</artifactId>
-			<version>4.6.6.BUILD-SNAPSHOT</version>
+			<version>${hq.version}</version>
 		</dependency>
+		<dependency>
+            <groupId>org.hyperic.hq.plugin</groupId>
+            <artifactId>netservices-plugin</artifactId>
+            <version>${hq.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-httpclient</groupId>
+            <artifactId>commons-httpclient</artifactId>
+            <version>${httpclient.version}</version>
+        </dependency>
 	</dependencies>
 	<build>
 		<plugins>
@@ -161,4 +171,8 @@
 		<url>https://fisheye.springsource.org/browse/hq</url>
 	</scm>
 
+	<properties>
+		<hq.version>4.6.6.BUILD-SNAPSHOT</hq.version>
+		<httpclient.version>3.1</httpclient.version>
+	</properties>
 </project>
