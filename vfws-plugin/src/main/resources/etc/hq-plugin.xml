@@ -213,9 +213,15 @@
     
     <server name="vFabric Web Server"
         version="5.1">
+        <property name="PROC_QUERY" value="State.Name.re=httpd.prefork"/>
+        <plugin type="autoinventory" class="VfwsServerDetector"/>
         <plugin type="measurement" class="org.hyperic.hq.product.MeasurementPlugin"/>
         <plugin type="collector" class="VfwsCollector"/>
-        
+
+        <properties>
+            <property name="version"/>
+            <property name="ServerVersion"/>
+        </properties>        
         <config include="vfws-server"/>
         
         <metrics include="vfws-server"/>
