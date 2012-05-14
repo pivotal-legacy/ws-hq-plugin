@@ -179,8 +179,7 @@
 	</distributionManagement>
 
 	<scm>
-		<developerConnection>scm:git:git://git.springsource.org/hq/hq.git</developerConnection>
-		<url>https://fisheye.springsource.org/browse/hq</url>
+		<developerConnection>scm:git:git@git.springsource.com:vfabric-hq-plugins/vf-websvr.git</developerConnection>
 	</scm>
 
 	<properties>
