@@ -44,7 +44,7 @@ public class VfwsServerDetector extends DaemonDetector
         _ptqlQueries.add("State.Name.eq=httpd.prefork,State.Name.Pne=$1");
         _ptqlQueries.add("State.Name.eq=httpd.worker,State.Name.Pne=$1");
         if (isWin32()) {
-            // TODO ADD windows ptql?
+            _ptqlQueries.add("State.Name.eq=httpd,State.Name.Pne=$1");
         }
     }
     
@@ -66,6 +66,10 @@ public class VfwsServerDetector extends DaemonDetector
                 for (int i=0; i<pids.length; i++) {
                     Long pid = pids[i];
                     String installPath = getInstallPath(pid);
+                    if (null == installPath) {
+                        _log.debug("Found pid " + pid + ", but couldn't identify installpath");
+                        continue;
+                    }
                     URL bmxUrl = findBmxUrl(installPath + "/conf/httpd.conf");
                     URL bmxQueryUrl = getBmxQueryUrl(bmxUrl,  QUERY_BMX + SERVER_STATUS);
                     BmxQuery query = new BmxQuery(bmxQueryUrl);
@@ -116,7 +120,6 @@ public class VfwsServerDetector extends DaemonDetector
     protected List discoverServices(ConfigResponse config)
         throws PluginException {
         List<ServiceResource> services = new ArrayList<ServiceResource>();
-        _log.info(config.toString());
         try {
             String proto = config.getValue("protocol");
             String hostname = config.getValue("hostname");
@@ -181,13 +184,16 @@ public class VfwsServerDetector extends DaemonDetector
             } else if(listen.getProto() != null) {
                 proto = listen.getProto();
             }
+            try {
+                _log.debug("Trying to make a URL from " + proto + ", " + host + ", " + port + ", " + path);
+                url = new URL(proto, host, port, path);
+                BmxQuery query = new BmxQuery(url);
+                query.getResult();
+                return url;
+            } catch (MalformedURLException e) {
+                _log.error(e,e);
+            }
         }
-        try {
-            url = new URL(proto, host, port, path);
-            return url;
-        } catch (MalformedURLException e) {
-            _log.error(e,e);
-        }        
         return url;
     }
     
@@ -205,13 +211,15 @@ public class VfwsServerDetector extends DaemonDetector
 
     private String getInstallPath(Long pid) {
         String[] args = getProcArgs(pid);
+        String last = null;
         for(int i=0; i<args.length; i++) {
             // look for -d and use next arg as installpath
+            // some installs have multiple -d, return the last
             if (ARG_ROOTDIR.equals(args[i])) {
-                return args[i+1];
+                last = args[i+1];
             }
         }
-        return null;
+        return last;
     }
     
     // Mostly borrowed this from apache-plugin. 
