@@ -184,7 +184,7 @@
 	</scm>
 
 	<properties>
-		<hq.version>4.6.6.BUILD-SNAPSHOT</hq.version>
+		<hq.version>4.6.5</hq.version>
 		<httpclient.version>3.1</httpclient.version>
 	</properties>
 </project>
