@@ -44,7 +44,7 @@ public class VfwsServerDetector extends DaemonDetector
         _ptqlQueries.add("State.Name.eq=httpd.prefork,State.Name.Pne=$1");
         _ptqlQueries.add("State.Name.eq=httpd.worker,State.Name.Pne=$1");
         if (isWin32()) {
-            _ptqlQueries.add("State.Name.eq=httpd,State.Name.Pne=$1");
+            _ptqlQueries.add("State.Name.eq=httpd");
         }
     }
     
