@@ -35,7 +35,7 @@ public class VfwsServerDetector extends DaemonDetector
     private static final int DEFAULT_BMX_PORT = 80; 
     private static final String DEFAULT_BMX_PATH = "/bmx";
     private static final String QUERY_BMX = "?query=";
-    private static final String SERVER_STATUS = "mod_bmx_status:Name=ServerStatus,Type=Normal";
+    private static final String SERVER_STATUS = "mod_bmx_status:Name=ServerStatus";
     private static final String VHOST_QUERY = "mod_bmx_vhost:";
     private static final String VHOST_SERVICE_TYPE = "Virtual Host";
     
