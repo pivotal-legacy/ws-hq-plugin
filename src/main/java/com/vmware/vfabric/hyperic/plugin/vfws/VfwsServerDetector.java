@@ -256,6 +256,8 @@ public class VfwsServerDetector extends DaemonDetector
                             }
                         }
                         config.add(value);
+                    } else {
+                        config.add(ent[1]);
                     }
                 }
             }
