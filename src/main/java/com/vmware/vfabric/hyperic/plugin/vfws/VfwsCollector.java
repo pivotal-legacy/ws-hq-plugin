@@ -57,6 +57,8 @@ public class VfwsCollector
             if(keyName.contains("Workers")) {
                 log.error("Doing extra parsing on " + keyName);
                 setWorkers(keyName, val);
+            } else if (keyName.contains("StartTime")) {
+                setStartTime(keyName, val);
             } else {
                 setValue(keyName, val);
             }
