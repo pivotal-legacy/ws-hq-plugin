@@ -55,7 +55,6 @@ public class VfwsCollector
             String val = (String)value;
             // BusyWorkers and IdleWorkers have u in the values
             if(keyName.contains("Workers")) {
-                log.error("Doing extra parsing on " + keyName);
                 setWorkers(keyName, val);
             } else if (keyName.contains("StartTime")) {
                 setStartTime(keyName, val);
