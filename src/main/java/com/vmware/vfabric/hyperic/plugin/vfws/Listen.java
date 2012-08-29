@@ -19,7 +19,8 @@ public class Listen {
     private String _proto = null;
     
     public Listen(String line) {
-        String hostname, port;
+        String hostname = null;
+        String port = null;
         String[] exploded = StringUtil.explodeQuoted(line);
         if(exploded.length > 1) {
             // figure out if the extra is the protocol or if it's garbage.
@@ -35,9 +36,6 @@ public class Listen {
             hostname = ent[0];
             port = ent[1];
         } else {
-            // This will set both options to the same 
-            // We'll figure out which one is valid next
-            hostname = exploded[0];
             port = exploded[0];
         }
         try {
