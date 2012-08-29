@@ -81,6 +81,7 @@ public class Listen {
             InetAddress.getByName(address);
         } catch (UnknownHostException e) {
             // if it's unknown then we can't connect to it to get metrics later
+            return;
         }
         _address = address; 
     }
