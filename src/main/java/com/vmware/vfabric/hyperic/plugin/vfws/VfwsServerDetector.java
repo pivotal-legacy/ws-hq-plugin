@@ -38,6 +38,7 @@ public class VfwsServerDetector extends DaemonDetector
     private static final String SERVER_STATUS = "mod_bmx_status:Name=ServerStatus";
     private static final String VHOST_QUERY = "mod_bmx_vhost:";
     private static final String VHOST_SERVICE_TYPE = "Virtual Host";
+    private static final String HTTPD_CONF = "/conf/httpd.conf";
     
     private static final List<String> _ptqlQueries = new ArrayList<String>();
     static {
@@ -70,14 +71,19 @@ public class VfwsServerDetector extends DaemonDetector
                         _log.debug("Found pid " + pid + ", but couldn't identify installpath");
                         continue;
                     }
-                    URL bmxUrl = findBmxUrl(installPath + "/conf/httpd.conf");
+                    URL bmxUrl = findBmxUrl(installPath + HTTPD_CONF);
+                    if (bmxUrl == null) {
+                        _log.error("Parsing " + installPath + HTTPD_CONF + " failed to find " + 
+                            "usable Listen directive.") ;
+                        continue;
+                    }
                     URL bmxQueryUrl = getBmxQueryUrl(bmxUrl,  QUERY_BMX + SERVER_STATUS);
                     BmxQuery query = new BmxQuery(bmxQueryUrl);
                     BmxResult result = query.getResult();
                     try {
                         result.parseToProperties();
                     } catch (IOException e) {
-                        _log.error("Unable to parse results");
+                        _log.error("Unable to parse results", e);
                         return null;
                     }
                     Properties serverStatus = result.getProperties();
@@ -179,10 +185,15 @@ public class VfwsServerDetector extends DaemonDetector
             Listen listen = it.next();
             if(listen.getPort() != 0) {
                 port = listen.getPort();
-            } else if(listen.getAddress() != null) {
+                _log.debug("Port set to " + port);
+            }
+            if(listen.getAddress() != null) {
                 host = listen.getAddress();
-            } else if(listen.getProto() != null) {
+                _log.debug("host set to " + host);
+            }
+            if(listen.getProto() != null) {
                 proto = listen.getProto();
+                _log.debug("Proto set to " + proto);
             }
             try {
                 _log.debug("Trying to make a URL from " + proto + ", " + host + ", " + port + ", " + path);
