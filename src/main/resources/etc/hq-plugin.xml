@@ -225,6 +225,13 @@
         </properties>        
         <config include="vfws-server"/>
         
+        <plugin type="config_track"
+            class="org.hyperic.hq.product.FileChangeTrackPlugin">
+            <monitored>
+                <folder path="conf" recursive="true" filter=".*\.conf"/>
+            </monitored>
+        </plugin>
+
         <metrics include="vfws-server"/>
         
         <service name="Virtual Host">
