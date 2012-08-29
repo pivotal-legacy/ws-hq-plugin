@@ -89,8 +89,11 @@ public class VfwsServerDetector extends DaemonDetector
                     Properties serverStatus = result.getProperties();
                     ServerResource server = createServerResource(installPath);
                     ConfigResponse cprop = new ConfigResponse();
-                    //TODO add version detection
-                    String version = getTypeInfo().getVersion();
+                    String version = getVersion((String)serverStatus.get("ServerVersion"));
+                    if (!version.equals(getTypeInfo().getVersion())) {
+                        // Version not matched
+                        continue;
+                    }
                     cprop.setValue("version", version);
                     cprop.setValue("ServerVersion", (String)serverStatus.get("ServerVersion"));
                     server.setCustomProperties(cprop);
@@ -112,6 +115,16 @@ public class VfwsServerDetector extends DaemonDetector
         return servers;
     }
     
+    private String getVersion(String versionString) {
+        String[] ent = versionString.split(" ");
+        for(int i = 0; i < ent.length; i++) {
+            if(ent[i].contains("vFabric/")) {
+                return ent[i].split("/")[1].substring(0,3);
+            }
+        }
+        return null;
+    }
+
     private URL getBmxQueryUrl(URL url, String path) {
         try {
             URL newUrl = new URL(url.getProtocol(), url.getHost(), url.getPort(), 

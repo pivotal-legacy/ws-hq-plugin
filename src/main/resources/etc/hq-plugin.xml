@@ -238,4 +238,9 @@
         </service>
         
     </server>
+    
+    <server name="vFabric Web Server"
+        version="5.2"
+        include="5.1">
+    </server>
 </plugin>
