@@ -39,6 +39,8 @@ public class VfwsServerDetector extends DaemonDetector
     private static final String VHOST_QUERY = "mod_bmx_vhost:";
     private static final String VHOST_SERVICE_TYPE = "Virtual Host";
     private static final String HTTPD_CONF = "/conf/httpd.conf";
+    private static final String CONF_DIRECTIVE_LISTEN = "LISTEN";
+    private static final String CONF_DIRECTIVE_INCLUDE = "INCLUDE";
     
     private static final List<String> _ptqlQueries = new ArrayList<String>();
     static {
@@ -71,7 +73,7 @@ public class VfwsServerDetector extends DaemonDetector
                         _log.debug("Found pid " + pid + ", but couldn't identify installpath");
                         continue;
                     }
-                    URL bmxUrl = findBmxUrl(installPath + HTTPD_CONF);
+                    URL bmxUrl = findBmxUrl(installPath,  HTTPD_CONF);
                     if (bmxUrl == null) {
                         _log.debug("Parsing " + installPath + HTTPD_CONF + " failed to find " + 
                             "usable Listen directive.") ;
@@ -186,14 +188,14 @@ public class VfwsServerDetector extends DaemonDetector
                       ",Args.*.eq=" + installPath;
     }
     
-    private URL findBmxUrl(String filename) {
+    private URL findBmxUrl(String installPath, String filename) {
         URL url = null;
         String proto = DEFAULT_BMX_PROTO; 
         String host = DEFAULT_BMX_HOST;
         int port = DEFAULT_BMX_PORT;
         String path = DEFAULT_BMX_PATH;
         
-        List<Listen> listens = getListens(filename);
+        List<Listen> listens = getListens(installPath, filename);
         for(Iterator<Listen> it = listens.iterator(); it.hasNext();) {
             Listen listen = it.next();
             if(listen.getPort() != 0) {
@@ -221,9 +223,9 @@ public class VfwsServerDetector extends DaemonDetector
         return url;
     }
     
-    private List<Listen> getListens(String filename) {
+    private List<Listen> getListens(String installPath, String filename) {
         List<Listen> listens = new ArrayList<Listen>();
-        List<String> config = parseConfigForListen(filename);
+        List<String> config = parseConfigForListen(installPath, filename);
         for(Iterator<String> it = config.iterator(); it.hasNext();) {
             Listen listen = new Listen((String) it.next()); 
             if (listen.isValid()) {
@@ -248,10 +250,17 @@ public class VfwsServerDetector extends DaemonDetector
     
     // Mostly borrowed this from apache-plugin. 
     // TODO This needs cleaning up
-    private static List<String> parseConfigForListen(String file) {
+    private static List<String> parseConfigForListen(String installPath, String filename) {
+        File file = new File(installPath + "/" + filename);
         List<String> config = new ArrayList<String>();
         String line;
         BufferedReader reader = null;
+        
+        if(!file.exists()) {
+            _log.debug(file.getAbsolutePath() + " doesn't exist");
+            return config;
+        }        
+
         try {
             reader = new BufferedReader(new FileReader(file));
             while ((line = reader.readLine()) != null) {
@@ -270,7 +279,7 @@ public class VfwsServerDetector extends DaemonDetector
                 }
                 line = line.trim();
                 String[] ent = StringUtil.explodeQuoted(line);
-                if ("Listen".equals(ent[0])) {
+                if (CONF_DIRECTIVE_LISTEN.equals(ent[0].toUpperCase())) {
                     if (ent.length > 2) {
                         // there may be more than one option so combine them
                         String value = "";
@@ -282,6 +291,11 @@ public class VfwsServerDetector extends DaemonDetector
                         config.add(value);
                     } else {
                         config.add(ent[1]);
+                    }
+                } else if (CONF_DIRECTIVE_INCLUDE.equals(ent[0].toUpperCase())) {
+                    List <String> includedConf = parseConfigForListen(installPath, ent[1]);
+                    if(!includedConf.isEmpty()) {
+                        config.addAll(includedConf);
                     }
                 }
             }
