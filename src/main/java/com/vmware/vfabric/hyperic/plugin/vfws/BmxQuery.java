@@ -56,6 +56,7 @@ public class BmxQuery {
         try {
             HttpResponse response = client.execute(method);
             _result = new BmxResult(response);
+            _log.debug("Got " + response.getStatusLine().getStatusCode() + " from " + getURL().toString());
         } catch (IOException e) {
             _log.debug(e,e);
         }
