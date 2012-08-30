@@ -73,7 +73,7 @@ public class VfwsServerDetector extends DaemonDetector
                     }
                     URL bmxUrl = findBmxUrl(installPath + HTTPD_CONF);
                     if (bmxUrl == null) {
-                        _log.error("Parsing " + installPath + HTTPD_CONF + " failed to find " + 
+                        _log.debug("Parsing " + installPath + HTTPD_CONF + " failed to find " + 
                             "usable Listen directive.") ;
                         continue;
                     }
@@ -83,7 +83,7 @@ public class VfwsServerDetector extends DaemonDetector
                     try {
                         result.parseToProperties();
                     } catch (IOException e) {
-                        _log.error("Unable to parse results", e);
+                        _log.debug("Unable to parse results", e);
                         return null;
                     }
                     Properties serverStatus = result.getProperties();
