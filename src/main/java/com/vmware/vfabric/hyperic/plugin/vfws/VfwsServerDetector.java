@@ -86,7 +86,7 @@ public class VfwsServerDetector extends DaemonDetector
                         result.parseToProperties();
                     } catch (IOException e) {
                         _log.debug("Unable to parse results", e);
-                        return null;
+                        continue;
                     }
                     Properties serverStatus = result.getProperties();
                     ServerResource server = createServerResource(installPath);
