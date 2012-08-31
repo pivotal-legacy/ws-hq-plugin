@@ -67,6 +67,7 @@
         <metric name="Start Elapsed"
             units="mu"
             defaultOn="true"
+            collectionType="static"
             category="Availability"/>
 
         <metric name="Start Time"
