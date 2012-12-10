@@ -191,4 +191,19 @@
 
 	<server name="vFabric Web Server" version="5.2" include="5.1">
 	</server>
+	
+	<help name="vFabric Web Server 5.1">
+    <![CDATA[
+    <h4>Configuration Help</h4>
+    <p>
+    mod_bmx must be enabled in httpd.conf or included file. 
+    </p>
+    ]]>
+    </help>
+    
+    <help name="vFabric Web Server 5.2"
+        include="vFabric Web Server 5.1">
+    </help>
+    
+	
 </plugin>
