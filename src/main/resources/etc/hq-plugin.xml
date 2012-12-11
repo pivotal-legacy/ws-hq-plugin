@@ -196,7 +196,24 @@
     <![CDATA[
     <h4>Configuration Help</h4>
     <p>
-    mod_bmx must be enabled in httpd.conf or included file. 
+    mod_bmx must be enabled in httpd.conf or included file.  By default a vFabric Web Server will 
+    include extras/httpd-info.conf which contains the following:
+    </p>
+    <p>
+&lt;Location /bmx&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;SetHandler bmx-handler<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;Order Deny,Allow<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;Deny from all<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;Allow from 127.0.0.1<br/>
+&lt;/Location&gt;
+    </p>
+    <p>
+    In addition by default mod_bmx_* modules are enabled in httpd.conf. 
+    </p>
+    <p>
+LoadModule bmx_module            "/opt/vmware/vfabric-web-server/httpd-2.2/modules/mod_bmx.so"<br/>
+LoadModule bmx_status_module     "/opt/vmware/vfabric-web-server/httpd-2.2/modules/mod_bmx_status.so"<br/>
+LoadModule bmx_vhost_module      "/opt/vmware/vfabric-web-server/httpd-2.2/modules/mod_bmx_vhost.so"<br/>
     </p>
     ]]>
     </help>
