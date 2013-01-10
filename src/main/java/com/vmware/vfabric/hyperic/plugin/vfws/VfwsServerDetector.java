@@ -62,6 +62,8 @@ public class VfwsServerDetector extends DaemonDetector
 
     private List<ServerResource> getServers(List<String> ptqlQueries) {
         List<ServerResource> servers = new ArrayList<ServerResource>();
+        // Flag to track success
+        Boolean success = false;
         for(final Iterator<String> it=ptqlQueries.iterator(); it.hasNext(); ) {
             String ptql = (String)it.next();
             final long[] pids = getPids(ptql);
@@ -84,6 +86,7 @@ public class VfwsServerDetector extends DaemonDetector
                     BmxResult result = query.getResult();
                     try {
                         result.parseToProperties();
+                        success = true;
                     } catch (IOException e) {
                         _log.debug("Unable to parse results", e);
                         continue;
@@ -111,6 +114,10 @@ public class VfwsServerDetector extends DaemonDetector
                     String instanceName = getInstanceName(installPath);
                     server.setName(getPlatformName() + " " + RESOURCE_TYPE + " " + version + " " + instanceName);
                     servers.add(server);
+                }
+                if (!success) {
+                    _log.error("[getServers] Found potential VFWS process however was unable to determine URL of mod_bmx");
+                    _log.error("[getServers] Make sure -d is specified on command line and that proxying or redirecting isn't including /bmx s");
                 }
             }
         }
