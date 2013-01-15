@@ -93,6 +93,13 @@ public class VfwsControlPlugin extends ServerControlPlugin  {
         handleResult(STATE_STARTED);
     }
 
+    public void gracefulstop()
+    {
+        doCommand("gracefulstop");
+
+        handleResult(STATE_STARTED);
+    }
+
     public void configtest()
     {
         // state does not change during configtest
