@@ -117,7 +117,7 @@ public class VfwsServerDetector extends DaemonDetector
                 }
                 if (!success) {
                     _log.error("[getServers] Found potential VFWS process however was unable to determine URL of mod_bmx");
-                    _log.error("[getServers] Make sure -d is specified on command line and that proxying or redirecting isn't including /bmx s");
+                    _log.error("[getServers] Make sure -d is specified on command line and that proxying or redirecting isn't including /bmx");
                 }
             }
         }
