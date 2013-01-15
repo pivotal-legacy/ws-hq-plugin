@@ -166,7 +166,7 @@
 
 		<plugin type="control" class="VfwsControlPlugin" />
 
-		<actions include="start,stop,restart,graceful,configtest" />
+		<actions include="start,stop,restart,graceful,gracefulstop,configtest" />
 
 		<plugin type="control" platform="Win32"
 			class="org.hyperic.hq.product.Win32ControlPlugin" />
