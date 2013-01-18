@@ -7,7 +7,7 @@
 	<artifactId>vfws-plugin</artifactId>
 	<packaging>jar</packaging>
 	<name>Hyperic HQ Plugin - vfws plugin</name>
-	<version>1.2.M4</version>
+	<version>1.2.BUILD-SNAPSHOT</version>
 
 	<dependencies>
 		<dependency>
@@ -201,9 +201,9 @@
 
 	<distributionManagement>
                 <repository>
-                    <id>hyperic-release</id>
+                    <id>hyperic-milestone</id>
                     <name>Hyperic Release Repository</name>
-                    <url>s3://maven.hyperic.org/release</url>
+                    <url>s3://maven.hyperic.org/milestone</url>
                 </repository>
 		<snapshotRepository>
 			<id>hyperic-snapshot</id>
