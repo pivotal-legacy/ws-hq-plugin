@@ -179,8 +179,6 @@
 		<plugin type="control" platform="Win32"
 			class="org.hyperic.hq.product.Win32ControlPlugin" />
 
-		<actions platform="Win32" include="start,stop,restart" />
-
 		<config type="control" platform="Win32">
 			<option name="service_name" description="Vfws Service Name" />
 		</config>
