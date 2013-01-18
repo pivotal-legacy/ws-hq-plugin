@@ -41,7 +41,10 @@ public class VfwsServerDetector extends DaemonDetector
     private static final String HTTPD_CONF = "/conf/httpd.conf";
     private static final String CONF_DIRECTIVE_LISTEN = "LISTEN";
     private static final String CONF_DIRECTIVE_INCLUDE = "INCLUDE";
-    
+    private static final String DEFAULT_WINDOWS_SERVICE_PREFIX = "vFabrichttpd";
+    private static final String PROP_PROGRAM = "program";
+    private static final String PROP_SERVICENAME = "service_name";
+
     private static final List<String> _ptqlQueries = new ArrayList<String>();
     static {
         _ptqlQueries.add("State.Name.eq=httpd.prefork,State.Name.Pne=$1");
@@ -111,7 +114,9 @@ public class VfwsServerDetector extends DaemonDetector
                     setProductConfig(server, productConfig);
                     // sets a default Measurement Config property with no values
                     setMeasurementConfig(server, new ConfigResponse());
+                    ConfigResponse controlConfig = getControlConfig(installPath);
                     String instanceName = getInstanceName(installPath);
+                    setControlConfig(server, controlConfig);
                     server.setName(getPlatformName() + " " + RESOURCE_TYPE + " " + version + " " + instanceName);
                     servers.add(server);
                 }
@@ -123,7 +128,52 @@ public class VfwsServerDetector extends DaemonDetector
         }
         return servers;
     }
-    
+   
+
+    protected ConfigResponse getControlConfig(String path) {
+        Properties props = new Properties();
+
+        if (isWin32()) {
+            String sname=getWindowsServiceName(path);
+            if(sname!=null)
+                props.setProperty(PROP_SERVICENAME,sname);
+            return new ConfigResponse(props);
+        }
+        else {
+            String file = path + "/" + getDefaultControlScript();
+
+            if (!exists(file)) {
+                file = getTypeProperty(PROP_PROGRAM);
+            }
+            if (file == null) {
+                return null;
+            }
+
+            props.setProperty(PROP_PROGRAM, file);
+
+            return new ConfigResponse(props);
+        }
+    }
+
+    protected String getWindowsServiceName(String path) {
+        if(!exists(path)) {
+            return DEFAULT_WINDOWS_SERVICE_PREFIX + " unconfigured";
+        }
+        return DEFAULT_WINDOWS_SERVICE_PREFIX + getInstanceName(path);
+    }
+
+    private boolean exists(String name) {
+        if (name == null) { 
+            return false;
+        }
+        return new File(name).exists();
+    }
+
+    protected String getDefaultControlScript() {
+        String file = getTypeProperty("DEFAULT_SCRIPT");
+        return file;
+    }
+
     private String getVersion(String versionString) {
         String[] ent = versionString.split(" ");
         for(int i = 0; i < ent.length; i++) {

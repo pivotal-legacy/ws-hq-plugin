@@ -143,7 +143,7 @@
 			optional="true" default="false" />
 	</config>
 
-	<server name="vFabric Web Server" version="5.1">
+	<server name="vFabric Web Server" version="5.1" platforms="Unix,Win32">
 		<property name="PROC_QUERY" value="State.Name.re=httpd.prefork" />
 		<plugin type="autoinventory" class="VfwsServerDetector" />
 		<plugin type="measurement" class="org.hyperic.hq.product.MeasurementPlugin" />
@@ -167,6 +167,14 @@
 		<plugin type="control" class="VfwsControlPlugin" />
 
 		<actions include="start,stop,restart,graceful,gracefulstop,configtest" />
+
+        <plugin type="control" platform="Win32" class="org.hyperic.hq.product.Win32ControlPlugin"/>
+
+        <actions platform="Win32" include="start,stop,restart,graceful,configtest"/>
+
+        <config type="control" platform="Win32">
+            <option name="service_name" description="VFWS Service Name"/>
+        </config>
 
 		<plugin type="control" platform="Win32"
 			class="org.hyperic.hq.product.Win32ControlPlugin" />
