@@ -44,6 +44,7 @@ public class VfwsServerDetector extends DaemonDetector
     private static final String DEFAULT_WINDOWS_SERVICE_PREFIX = "vFabrichttpd";
     private static final String PROP_PROGRAM = "program";
     private static final String PROP_SERVICENAME = "service_name";
+    private static final String DEFAULT_PROGRAM = "/bin/httpdctl";
 
     private static final List<String> _ptqlQueries = new ArrayList<String>();
     static {
@@ -170,8 +171,7 @@ public class VfwsServerDetector extends DaemonDetector
     }
 
     protected String getDefaultControlScript() {
-        String file = getTypeProperty("DEFAULT_SCRIPT");
-        return file;
+        return DEFAULT_PROGRAM;
     }
 
     private String getVersion(String versionString) {
