@@ -44,7 +44,9 @@ public class VfwsServerDetector extends DaemonDetector
     private static final String DEFAULT_WINDOWS_SERVICE_PREFIX = "vFabrichttpd";
     private static final String PROP_PROGRAM = "program";
     private static final String PROP_SERVICENAME = "service_name";
+    private static final String PROP_PIDFILE = "pidfile";
     private static final String DEFAULT_PROGRAM = "/bin/httpdctl";
+    private static final String DEFAULT_PIDFILE = "/logs/httpd.pid";
 
     private static final List<String> _ptqlQueries = new ArrayList<String>();
     static {
@@ -142,6 +144,7 @@ public class VfwsServerDetector extends DaemonDetector
         }
         else {
             String file = path + "/" + getDefaultControlScript();
+            String pidFile = path + "/" + DEFAULT_PIDFILE;;
 
             if (!exists(file)) {
                 file = getTypeProperty(PROP_PROGRAM);
@@ -151,6 +154,7 @@ public class VfwsServerDetector extends DaemonDetector
             }
 
             props.setProperty(PROP_PROGRAM, file);
+            props.setProperty(PROP_PIDFILE, pidFile);
 
             return new ConfigResponse(props);
         }
