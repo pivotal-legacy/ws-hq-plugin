@@ -197,6 +197,9 @@
 
 	<server name="vFabric Web Server" version="5.2" include="5.1">
 	</server>
+
+	<server name="vFabric Web Server" version="5.3" include="5.1">
+	</server>
 	
 	<help name="vFabric Web Server 5.1">
     <![CDATA[
@@ -228,5 +231,7 @@ LoadModule bmx_vhost_module      "/opt/vmware/vfabric-web-server/httpd-2.2/modul
         include="vFabric Web Server 5.1">
     </help>
     
-	
+	<help name="vFabric Web Server 5.3"
+		include="vFabric Web Server 5.1">
+	</help>
 </plugin>
