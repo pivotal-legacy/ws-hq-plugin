@@ -7,7 +7,7 @@
 	<artifactId>vfws-plugin</artifactId>
 	<packaging>jar</packaging>
 	<name>Hyperic HQ Plugin - vfws plugin</name>
-    <version>1.3</version>
+    <version>1.4.BUILD-SNAPSHOT</version>
 
 	<dependencies>
 		<dependency>
