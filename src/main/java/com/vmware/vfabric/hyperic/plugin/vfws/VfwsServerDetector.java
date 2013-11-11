@@ -120,7 +120,8 @@ public class VfwsServerDetector extends DaemonDetector
                     ConfigResponse controlConfig = getControlConfig(installPath);
                     String instanceName = getInstanceName(installPath);
                     setControlConfig(server, controlConfig);
-                    server.setName(getPlatformName() + " " + RESOURCE_TYPE + " " + version + " " + instanceName);
+                    server.setName(getPlatformName() + " " + getServerName(RESOURCE_TYPE) + " " + version + " " + instanceName);
+                    server.setDescription(getServerDescription(server.getInstallPath()));
                     servers.add(server);
                 }
                 if (!success) {
@@ -369,6 +370,34 @@ public class VfwsServerDetector extends DaemonDetector
             }
         }
         return config;
+    }
+
+    /**
+     * Get the server name for server resource found.
+     *
+     * @param defaultServerName The default server name.
+     * @return
+     */
+    protected String getServerName(String defaultServerName) {
+        String serverName = getTypeProperties().getProperty("SERVER_NAME");
+        if (serverName == null) {
+            serverName = defaultServerName;
+        }
+        return serverName;
+    }
+
+    /**
+     * Get the description for server.
+     *
+     * @param defaultDescription The default description.
+     * @return
+     */
+    protected String getServerDescription(String defaultDescription) {
+        String serverDescription = getTypeProperties().getProperty("SERVER_DESCRIPTION");
+        if (serverDescription == null) {
+            serverDescription = defaultDescription;
+        }
+        return serverDescription;
     }
 
     private List<String> getPtqlQueries() {
