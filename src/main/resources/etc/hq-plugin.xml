@@ -50,76 +50,76 @@
 			collectionType="static" category="Availability" />
 
 		<metric name="In Bytes GET" indicator="true" defaultOn="true"
-            collectionType="trendsup" category="THROUGHPUT" />
+			collectionType="trendsup" category="THROUGHPUT" />
 
 		<metric name="In Bytes HEAD" indicator="true" defaultOn="true"
-            collectionType="trendsup" category="THROUGHPUT" />
+			collectionType="trendsup" category="THROUGHPUT" />
 
 		<metric name="In Bytes POST" indicator="true" defaultOn="true"
-            collectionType="trendsup" category="THROUGHPUT" />
+			collectionType="trendsup" category="THROUGHPUT" />
 
 		<metric name="In Bytes PUT" defaultOn="true" indicator="true"
-            collectionType="trendsup" category="THROUGHPUT" />
+			collectionType="trendsup" category="THROUGHPUT" />
 
 		<metric name="In Requests GET" indicator="true" defaultOn="true"
-            collectionType="trendsup" category="THROUGHPUT" />
+			collectionType="trendsup" category="THROUGHPUT" />
 
 		<metric name="In Requests HEAD" indicator="true" defaultOn="true"
-            collectionType="trendsup" category="THROUGHPUT" />
+			collectionType="trendsup" category="THROUGHPUT" />
 
 		<metric name="In Requests POST" defaultOn="true" indicator="true"
-            collectionType="trendsup" category="THROUGHPUT" />
+			collectionType="trendsup" category="THROUGHPUT" />
 
 		<metric name="In Requests PUT" defaultOn="true" indicator="true"
-            collectionType="trendsup" category="THROUGHPUT" />
+			collectionType="trendsup" category="THROUGHPUT" />
 
 		<metric name="Out Bytes 200" defaultOn="true" indicator="true"
-            collectionType="trendsup" category="THROUGHPUT" />
+			collectionType="trendsup" category="THROUGHPUT" />
 
 		<metric name="Out Bytes 301" defaultOn="true" indicator="true"
-            collectionType="trendsup" category="THROUGHPUT" />
+			collectionType="trendsup" category="THROUGHPUT" />
 
 		<metric name="Out Bytes 302" indicator="true" defaultOn="true"
-            collectionType="trendsup" category="THROUGHPUT" />
+			collectionType="trendsup" category="THROUGHPUT" />
 
 		<metric name="Out Bytes 403" indicator="true" defaultOn="true"
-            collectionType="trendsup" category="THROUGHPUT" />
+			collectionType="trendsup" category="THROUGHPUT" />
 
 		<metric name="Out Bytes 404" indicator="true" defaultOn="true"
-            collectionType="trendsup" category="THROUGHPUT" />
+			collectionType="trendsup" category="THROUGHPUT" />
 
 		<metric name="Out Bytes 500" defaultOn="true" indicator="true"
-            collectionType="trendsup" category="THROUGHPUT" />
+			collectionType="trendsup" category="THROUGHPUT" />
 
 		<metric name="Out Responses 200" indicator="true" defaultOn="true"
-            collectionType="trendsup" category="THROUGHPUT" />
+			collectionType="trendsup" category="THROUGHPUT" />
 
 		<metric name="Out Responses 301" indicator="true" defaultOn="true"
-            collectionType="trendsup" category="THROUGHPUT" />
+			collectionType="trendsup" category="THROUGHPUT" />
 
 		<metric name="Out Responses 302" indicator="true" defaultOn="true"
-            collectionType="trendsup" category="THROUGHPUT" />
+			collectionType="trendsup" category="THROUGHPUT" />
 
 		<metric name="Out Responses 401" indicator="true" defaultOn="true"
-            collectionType="trendsup" category="THROUGHPUT" />
+			collectionType="trendsup" category="THROUGHPUT" />
 
 		<metric name="Out Responses 403" indicator="true" defaultOn="true"
-            collectionType="trendsup" category="THROUGHPUT" />
+			collectionType="trendsup" category="THROUGHPUT" />
 
 		<metric name="Out Responses 404" defaultOn="true" indicator="true"
-            collectionType="trendsup" category="THROUGHPUT" />
+			collectionType="trendsup" category="THROUGHPUT" />
 
 		<metric name="Out Responses 500" defaultOn="true" indicator="true"
-            collectionType="trendsup" category="THROUGHPUT" />
+			collectionType="trendsup" category="THROUGHPUT" />
 
 		<metric name="In Low Bytes" defaultOn="true" indicator="true"
-            collectionType="trendsup" category="THROUGHPUT" />
+			collectionType="trendsup" category="THROUGHPUT" />
 
 		<metric name="In Requests" indicator="true" defaultOn="true"
-            collectionType="trendsup" category="THROUGHPUT" />
+			collectionType="trendsup" category="THROUGHPUT" />
 
 		<metric name="Out Responses" indicator="true" defaultOn="true"
-            collectionType="trendsup" category="THROUGHPUT" />
+			collectionType="trendsup" category="THROUGHPUT" />
 	</metrics>
 
 
@@ -168,13 +168,14 @@
 
 		<actions include="start,stop,restart,graceful,gracefulstop,configtest" />
 
-        <plugin type="control" platform="Win32" class="org.hyperic.hq.product.Win32ControlPlugin"/>
+		<plugin type="control" platform="Win32"
+			class="org.hyperic.hq.product.Win32ControlPlugin" />
 
-        <actions platform="Win32" include="start,stop,restart,graceful,configtest"/>
+		<actions platform="Win32" include="start,stop,restart,graceful,configtest" />
 
-        <config type="control" platform="Win32">
-            <option name="service_name" description="VFWS Service Name"/>
-        </config>
+		<config type="control" platform="Win32">
+			<option name="service_name" description="VFWS Service Name" />
+		</config>
 
 		<plugin type="control" platform="Win32"
 			class="org.hyperic.hq.product.Win32ControlPlugin" />
@@ -200,7 +201,10 @@
 
 	<server name="vFabric Web Server" version="5.3" include="5.1">
 	</server>
-	
+
+	<server name="vFabric Web Server" version="5.4" include="5.1">
+	</server>
+
 	<help name="vFabric Web Server 5.1">
     <![CDATA[
     <h4>Configuration Help</h4>
@@ -225,13 +229,15 @@ LoadModule bmx_status_module     "/opt/vmware/vfabric-web-server/httpd-2.2/modul
 LoadModule bmx_vhost_module      "/opt/vmware/vfabric-web-server/httpd-2.2/modules/mod_bmx_vhost.so"<br/>
     </p>
     ]]>
-    </help>
-    
-    <help name="vFabric Web Server 5.2"
-        include="vFabric Web Server 5.1">
-    </help>
-    
-	<help name="vFabric Web Server 5.3"
-		include="vFabric Web Server 5.1">
 	</help>
+
+	<help name="vFabric Web Server 5.2" include="vFabric Web Server 5.1">
+	</help>
+
+	<help name="vFabric Web Server 5.3" include="vFabric Web Server 5.1">
+	</help>
+
+	<help name="vFabric Web Server 5.4" include="vFabric Web Server 5.1">
+	</help>
+
 </plugin>
