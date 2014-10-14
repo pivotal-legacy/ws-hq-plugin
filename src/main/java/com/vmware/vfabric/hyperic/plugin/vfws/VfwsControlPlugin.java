@@ -34,7 +34,8 @@ import org.hyperic.hq.product.PluginException;
 
 import org.hyperic.util.config.ConfigResponse;
 
-public class VfwsControlPlugin extends ServerControlPlugin  {
+public class VfwsControlPlugin
+    extends ServerControlPlugin {
     static final String DEFAULT_SCRIPT = "bin/httpdctl";
     static final String DEFAULT_PIDFILE = "logs/httpd.pid";
 
@@ -48,62 +49,53 @@ public class VfwsControlPlugin extends ServerControlPlugin  {
         return true;
     }
 
-    public void configure(ConfigResponse config)
-        throws PluginException
-    {
+    public void configure(ConfigResponse config) throws PluginException {
         super.configure(config);
         validateControlProgram(getTypeInfo().getName());
     }
 
     // Define control methods
 
-    public void start()
-    {
+    public void start() {
         doCommand("start");
 
         handleResult(STATE_STARTED);
     }
 
     // XXX: should we handle encrypted keys?
-    public void startssl()
-    {
+    public void startssl() {
         doCommand("startssl");
 
         handleResult(STATE_STARTED);
     }
 
-    public void stop()
-    {
+    public void stop() {
         doCommand("stop");
 
         handleResult(STATE_STOPPED);
     }
 
-    public void restart()
-    {
+    public void restart() {
         this.doCommand("restart");
 
         handleResult(STATE_STARTED);
     }
 
-    public void graceful()
-    {
+    public void graceful() {
         doCommand("graceful");
-        
+
         handleResult(STATE_STARTED);
     }
 
-    public void gracefulstop()
-    {
+    public void gracefulstop() {
         doCommand("gracefulstop");
 
         handleResult(STATE_STOPPED);
     }
 
-    public void configtest()
-    {
+    public void configtest() {
         // state does not change during configtest
-        
+
         doCommand("configtest");
     }
 }

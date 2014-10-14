@@ -9,7 +9,7 @@ import org.hyperic.util.StringUtil;
 
 public class Listen {
 
-    private static final List<String>  PROTOCOLS = new ArrayList<String>();
+    private static final List<String> PROTOCOLS = new ArrayList<String>();
     static {
         PROTOCOLS.add("http");
         PROTOCOLS.add("https");
@@ -17,17 +17,17 @@ public class Listen {
     private int _port = 0;
     private String _address = null;
     private String _proto = null;
-    
+
     public Listen(String line) {
         String hostname = null;
         String port = null;
         String[] exploded = StringUtil.explodeQuoted(line);
-        if(exploded.length > 1) {
+        if (exploded.length > 1) {
             // figure out if the extra is the protocol or if it's garbage.
             try {
                 setProto(exploded[1]);
             } catch (IllegalArgumentException e) {
-                //not http or https so ignore
+                // not http or https so ignore
             }
         }
         // ip/hostname with : port?
@@ -49,7 +49,7 @@ public class Listen {
             // ignore
         }
     }
-    
+
     public boolean isValid() {
         if (_port != 0 || _address != null) {
             return true;
@@ -57,11 +57,11 @@ public class Listen {
             return false;
         }
     }
-    
+
     public void setPort(int port) {
         _port = port;
     }
-    
+
     public void setPort(String port) {
         try {
             _port = Integer.parseInt(port);
@@ -69,11 +69,11 @@ public class Listen {
             throw new IllegalArgumentException();
         }
     }
-    
+
     public int getPort() {
         return _port;
     }
-    
+
     public void setAddress(String address) {
         try {
             InetAddress.getByName(address);
@@ -81,21 +81,21 @@ public class Listen {
             // if it's unknown then we can't connect to it to get metrics later
             return;
         }
-        _address = address; 
+        _address = address;
     }
-    
+
     public String getAddress() {
         return _address;
     }
-    
+
     public void setProto(String proto) {
-        if(PROTOCOLS.contains(proto.toLowerCase())) {
+        if (PROTOCOLS.contains(proto.toLowerCase())) {
             _proto = proto;
         } else {
             throw new IllegalArgumentException();
         }
     }
-    
+
     public String getProto() {
         return _proto;
     }

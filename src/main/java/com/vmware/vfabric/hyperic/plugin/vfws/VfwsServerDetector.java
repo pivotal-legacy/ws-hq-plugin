@@ -22,9 +22,9 @@ import org.hyperic.util.config.ConfigResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-public class VfwsServerDetector extends DaemonDetector 
-    implements AutoServerDetector, FileServerDetector {
-    
+public class VfwsServerDetector
+    extends DaemonDetector implements AutoServerDetector, FileServerDetector {
+
     private static final String _logCtx = VfwsServerDetector.class.getName();
     private final static Log _log = LogFactory.getLog(_logCtx);
 
@@ -32,7 +32,7 @@ public class VfwsServerDetector extends DaemonDetector
     private static final String RESOURCE_TYPE = "vFabric Web Server";
     private static final String DEFAULT_BMX_PROTO = "http";
     private static final String DEFAULT_BMX_HOST = "localhost";
-    private static final int DEFAULT_BMX_PORT = 80; 
+    private static final int DEFAULT_BMX_PORT = 80;
     private static final String DEFAULT_BMX_PATH = "/bmx";
     private static final String QUERY_BMX = "?query=";
     private static final String SERVER_STATUS = "mod_bmx_status:Name=ServerStatus";
@@ -56,13 +56,14 @@ public class VfwsServerDetector extends DaemonDetector
             _ptqlQueries.add("State.Name.eq=httpd");
         }
     }
-    
-    public List<ServerResource> getServerResources(ConfigResponse platformConfig) throws PluginException {
+
+    public List<ServerResource> getServerResources(ConfigResponse platformConfig)
+        throws PluginException {
         setPlatformConfig(platformConfig);
         List<ServerResource> servers = new ArrayList<ServerResource>();
 
         servers = getServers(getPtqlQueries());
-        
+
         return servers;
     }
 
@@ -70,24 +71,24 @@ public class VfwsServerDetector extends DaemonDetector
         List<ServerResource> servers = new ArrayList<ServerResource>();
         // Flag to track success
         Boolean success = false;
-        for(final Iterator<String> it=ptqlQueries.iterator(); it.hasNext(); ) {
-            String ptql = (String)it.next();
+        for (final Iterator<String> it = ptqlQueries.iterator(); it.hasNext();) {
+            String ptql = (String) it.next();
             final long[] pids = getPids(ptql);
             if (null != pids && pids.length > 0) {
-                for (int i=0; i<pids.length; i++) {
+                for (int i = 0; i < pids.length; i++) {
                     Long pid = pids[i];
                     String installPath = getInstallPath(pid);
                     if (null == installPath) {
                         _log.debug("Found pid " + pid + ", but couldn't identify installpath");
                         continue;
                     }
-                    URL bmxUrl = findBmxUrl(installPath,  HTTPD_CONF);
+                    URL bmxUrl = findBmxUrl(installPath, HTTPD_CONF);
                     if (bmxUrl == null) {
-                        _log.debug("Parsing " + installPath + HTTPD_CONF + " failed to find " + 
-                            "usable Listen directive.") ;
+                        _log.debug("Parsing " + installPath + HTTPD_CONF + " failed to find " +
+                                   "usable Listen directive.");
                         continue;
                     }
-                    URL bmxQueryUrl = getBmxQueryUrl(bmxUrl,  QUERY_BMX + SERVER_STATUS);
+                    URL bmxQueryUrl = getBmxQueryUrl(bmxUrl, QUERY_BMX + SERVER_STATUS);
                     BmxQuery query = new BmxQuery(bmxQueryUrl);
                     BmxResult result = query.getResult();
                     try {
@@ -100,13 +101,13 @@ public class VfwsServerDetector extends DaemonDetector
                     Properties serverStatus = result.getProperties();
                     ServerResource server = createServerResource(installPath);
                     ConfigResponse cprop = new ConfigResponse();
-                    String version = getVersion((String)serverStatus.get("ServerVersion"));
+                    String version = getVersion((String) serverStatus.get("ServerVersion"));
                     if (!version.equals(getTypeInfo().getVersion())) {
                         // Version not matched
                         continue;
                     }
                     cprop.setValue("version", version);
-                    cprop.setValue("ServerVersion", (String)serverStatus.get("ServerVersion"));
+                    cprop.setValue("ServerVersion", (String) serverStatus.get("ServerVersion"));
                     server.setCustomProperties(cprop);
                     ConfigResponse productConfig = new ConfigResponse();
                     productConfig.setValue("process.query", getProcessQuery(ptql, installPath));
@@ -120,7 +121,8 @@ public class VfwsServerDetector extends DaemonDetector
                     ConfigResponse controlConfig = getControlConfig(installPath);
                     String instanceName = getInstanceName(installPath);
                     setControlConfig(server, controlConfig);
-                    server.setName(getPlatformName() + " " + getServerName(RESOURCE_TYPE) + " " + version + " " + instanceName);
+                    server.setName(getPlatformName() + " " + getServerName(RESOURCE_TYPE) + " " +
+                                   version + " " + instanceName);
                     server.setDescription(getServerDescription(server.getInstallPath()));
                     servers.add(server);
                 }
@@ -132,20 +134,19 @@ public class VfwsServerDetector extends DaemonDetector
         }
         return servers;
     }
-   
 
     protected ConfigResponse getControlConfig(String path) {
         Properties props = new Properties();
 
         if (isWin32()) {
-            String sname=getWindowsServiceName(path);
-            if(sname!=null)
-                props.setProperty(PROP_SERVICENAME,sname);
+            String sname = getWindowsServiceName(path);
+            if (sname != null)
+                props.setProperty(PROP_SERVICENAME, sname);
             return new ConfigResponse(props);
-        }
-        else {
+        } else {
             String file = path + "/" + getDefaultControlScript();
-            String pidFile = path + "/" + DEFAULT_PIDFILE;;
+            String pidFile = path + "/" + DEFAULT_PIDFILE;
+            ;
 
             if (!exists(file)) {
                 file = getTypeProperty(PROP_PROGRAM);
@@ -162,14 +163,14 @@ public class VfwsServerDetector extends DaemonDetector
     }
 
     protected String getWindowsServiceName(String path) {
-        if(!exists(path)) {
+        if (!exists(path)) {
             return DEFAULT_WINDOWS_SERVICE_PREFIX + " unconfigured";
         }
         return DEFAULT_WINDOWS_SERVICE_PREFIX + getInstanceName(path);
     }
 
     private boolean exists(String name) {
-        if (name == null) { 
+        if (name == null) {
             return false;
         }
         return new File(name).exists();
@@ -181,9 +182,9 @@ public class VfwsServerDetector extends DaemonDetector
 
     private String getVersion(String versionString) {
         String[] ent = versionString.split(" ");
-        for(int i = 0; i < ent.length; i++) {
-            if(ent[i].contains("vFabric/")) {
-                return ent[i].split("/")[1].substring(0,3);
+        for (int i = 0; i < ent.length; i++) {
+            if (ent[i].contains("vFabric/")) {
+                return ent[i].split("/")[1].substring(0, 3);
             }
         }
         return null;
@@ -191,17 +192,16 @@ public class VfwsServerDetector extends DaemonDetector
 
     private URL getBmxQueryUrl(URL url, String path) {
         try {
-            URL newUrl = new URL(url.getProtocol(), url.getHost(), url.getPort(), 
-                        url.getPath() + path);
+            URL newUrl = new URL(url.getProtocol(), url.getHost(), url.getPort(), url.getPath() +
+                                                                                  path);
             return newUrl;
         } catch (MalformedURLException e) {
             // return old url?
             return url;
         }
     }
-    
-    protected List discoverServices(ConfigResponse config)
-        throws PluginException {
+
+    protected List discoverServices(ConfigResponse config) throws PluginException {
         List<ServiceResource> services = new ArrayList<ServiceResource>();
         try {
             String proto = config.getValue("protocol");
@@ -212,12 +212,12 @@ public class VfwsServerDetector extends DaemonDetector
             BmxQuery query = new BmxQuery(bmxUrl);
             BmxResult result = query.getResult();
             List<String> names = result.parseForNames();
-            for(Iterator<String> it = names.iterator(); it.hasNext();) {
+            for (Iterator<String> it = names.iterator(); it.hasNext();) {
                 String name = it.next();
                 String type = getTypeInfo().getName() + " " + VHOST_SERVICE_TYPE;
                 ServiceResource service = new ServiceResource();
                 String[] ent = name.split(",");
-                if(ent[0].equals("Type=since-start")) {
+                if (ent[0].equals("Type=since-start")) {
                     String host = ent[1].split("=")[1];
                     String servicePort = ent[2].split("=")[1];
                     path = DEFAULT_BMX_PATH + QUERY_BMX + VHOST_QUERY + name;
@@ -234,62 +234,62 @@ public class VfwsServerDetector extends DaemonDetector
                 }
             }
         } catch (Exception e) {
-            _log.debug("Exception" + e,e);
+            _log.debug("Exception" + e, e);
             return null;
         }
         return services;
     }
-    
+
     private String getInstanceName(String installPath) {
         File name = new File(installPath);
         return name.getName();
     }
-    
+
     private String getProcessQuery(String ptql, String installPath) {
-        return ptql + ",Args.*.eq=" + ARG_ROOTDIR + 
-                      ",Args.*.eq=" + installPath;
+        return ptql + ",Args.*.eq=" + ARG_ROOTDIR + ",Args.*.eq=" + installPath;
     }
-    
+
     private URL findBmxUrl(String installPath, String filename) {
         URL url = null;
-        String proto = DEFAULT_BMX_PROTO; 
+        String proto = DEFAULT_BMX_PROTO;
         String host = DEFAULT_BMX_HOST;
         int port = DEFAULT_BMX_PORT;
         String path = DEFAULT_BMX_PATH;
-        
+
         List<Listen> listens = getListens(installPath, filename);
-        for(Iterator<Listen> it = listens.iterator(); it.hasNext();) {
+        for (Iterator<Listen> it = listens.iterator(); it.hasNext();) {
             Listen listen = it.next();
-            if(listen.getPort() != 0) {
+            if (listen.getPort() != 0) {
                 port = listen.getPort();
                 _log.debug("Port set to " + port);
             }
-            if(listen.getAddress() != null) {
+            if (listen.getAddress() != null) {
                 host = listen.getAddress();
                 _log.debug("host set to " + host);
             }
-            if(listen.getProto() != null) {
+            if (listen.getProto() != null) {
                 proto = listen.getProto();
                 _log.debug("Proto set to " + proto);
             }
             try {
-                _log.debug("Trying to make a URL from " + proto + ", " + host + ", " + port + ", " + path);
+                _log.debug("Trying to make a URL from " + proto + ", " + host + ", " + port + ", " +
+                           path);
                 url = new URL(proto, host, port, path);
                 BmxQuery query = new BmxQuery(url);
                 query.getResult();
                 return url;
             } catch (MalformedURLException e) {
-                _log.error(e,e);
+                _log.error(e, e);
             }
         }
         return url;
     }
-    
+
     private List<Listen> getListens(String installPath, String filename) {
         List<Listen> listens = new ArrayList<Listen>();
         List<String> config = parseConfigForListen(installPath, filename);
-        for(Iterator<String> it = config.iterator(); it.hasNext();) {
-            Listen listen = new Listen((String) it.next()); 
+        for (Iterator<String> it = config.iterator(); it.hasNext();) {
+            Listen listen = new Listen((String) it.next());
             if (listen.isValid()) {
                 listens.add(listen);
             }
@@ -300,28 +300,28 @@ public class VfwsServerDetector extends DaemonDetector
     private String getInstallPath(Long pid) {
         String[] args = getProcArgs(pid);
         String last = null;
-        for(int i=0; i<args.length; i++) {
+        for (int i = 0; i < args.length; i++) {
             // look for -d and use next arg as installpath
             // some installs have multiple -d, return the last
             if (ARG_ROOTDIR.equals(args[i])) {
-                last = args[i+1];
+                last = args[i + 1];
             }
         }
         return last;
     }
-    
-    // Mostly borrowed this from apache-plugin. 
+
+    // Mostly borrowed this from apache-plugin.
     // TODO This needs cleaning up
     private static List<String> parseConfigForListen(String installPath, String filename) {
         File file = new File(installPath + "/" + filename);
         List<String> config = new ArrayList<String>();
         String line;
         BufferedReader reader = null;
-        
-        if(!file.exists()) {
+
+        if (!file.exists()) {
             _log.debug(file.getAbsolutePath() + " doesn't exist");
             return config;
-        }        
+        }
 
         try {
             reader = new BufferedReader(new FileReader(file));
@@ -330,10 +330,8 @@ public class VfwsServerDetector extends DaemonDetector
                     continue;
                 }
                 char chr = line.charAt(0);
-                if ((chr == '#') || (chr == '<') ||
-                    Character.isWhitespace(chr))
-                {
-                    continue; //only looking at top-level
+                if ((chr == '#') || (chr == '<') || Character.isWhitespace(chr)) {
+                    continue; // only looking at top-level
                 }
                 int ix = line.indexOf('#');
                 if (ix != -1) {
@@ -345,7 +343,7 @@ public class VfwsServerDetector extends DaemonDetector
                     if (ent.length > 2) {
                         // there may be more than one option so combine them
                         String value = "";
-                        for (int i = 1; i<ent.length; i++) {
+                        for (int i = 1; i < ent.length; i++) {
                             if (null != ent[i]) {
                                 value += " " + ent[i];
                             }
@@ -355,8 +353,8 @@ public class VfwsServerDetector extends DaemonDetector
                         config.add(ent[1]);
                     }
                 } else if (CONF_DIRECTIVE_INCLUDE.equals(ent[0].toUpperCase())) {
-                    List <String> includedConf = parseConfigForListen(installPath, ent[1]);
-                    if(!includedConf.isEmpty()) {
+                    List<String> includedConf = parseConfigForListen(installPath, ent[1]);
+                    if (!includedConf.isEmpty()) {
                         config.addAll(includedConf);
                     }
                 }
@@ -366,7 +364,8 @@ public class VfwsServerDetector extends DaemonDetector
             if (reader != null) {
                 try {
                     reader.close();
-                } catch (IOException e) {}
+                } catch (IOException e) {
+                }
             }
         }
         return config;

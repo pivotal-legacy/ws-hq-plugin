@@ -22,34 +22,34 @@ public class BmxResult {
     Properties props = null;
 
     HttpResponse _response = null;
-    
+
     public BmxResult(HttpResponse response) {
         _response = response;
     }
-    
+
     public Properties getProperties() {
         return props;
     }
-    
+
     public List<String> parseForNames() throws IllegalStateException, IOException {
         InputStream is = _response.getEntity().getContent();
         InputStreamReader reader = new InputStreamReader(is);
         BufferedReader bufferedReader = new BufferedReader(reader);
         List<String> list = new ArrayList<String>();
         String line;
-        while((line = bufferedReader.readLine()) != null) {
-            if(line.startsWith("Name:")) {
+        while ((line = bufferedReader.readLine()) != null) {
+            if (line.startsWith("Name:")) {
                 String[] ent = line.split(":");
-                list.add((String)ent[2]);
+                list.add((String) ent[2]);
             }
         }
         return list;
     }
-    
+
     public Properties parseToProperties() throws IOException {
         InputStream is = _response.getEntity().getContent();
         props = new Properties();
-        
+
         Manifest manifest = new Manifest(is);
         Attributes attributes = manifest.getMainAttributes();
         if (null == attributes) {
@@ -57,7 +57,7 @@ public class BmxResult {
             return null;
         }
 
-        for(Iterator<Object> it = attributes.keySet().iterator(); it.hasNext();) { 
+        for (Iterator<Object> it = attributes.keySet().iterator(); it.hasNext();) {
             Name key = (Name) it.next();
             if (key == null) {
                 _log.debug("Skipping null key");
@@ -69,7 +69,7 @@ public class BmxResult {
                 continue;
             }
             String keyName = key.toString();
-            String val = (String)value;
+            String val = (String) value;
             props.put(keyName, val);
         }
         return props;
