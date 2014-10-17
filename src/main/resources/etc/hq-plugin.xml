@@ -196,6 +196,11 @@
 
 	</server>
 
+	<server name="Pivotal Web Server" version="6.0"
+		include="vFabric Web Server 5.1">
+		<plugin type="autoinventory" class="PWSServerDetector" />
+	</server>
+
 	<server name="vFabric Web Server" version="5.2" include="5.1">
 	</server>
 
