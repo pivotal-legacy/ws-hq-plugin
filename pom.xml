@@ -8,7 +8,7 @@
 	<artifactId>vfws-plugin</artifactId>
 	<packaging>jar</packaging>
 	<name>Hyperic HQ Plugin - vfws plugin</name>
-	<version>1.4.BUILD-SNAPSHOT</version>
+	<version>1.4.RELEASE</version>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
