@@ -184,7 +184,7 @@
 		<repository>
 			<id>public-pivotal</id>
 			<name>Pivotal Public Repositor</name>
-			<url>s3://public.pivotal.com/releases/plugin/ws-hq-plugin/</url>
+			<url>s3://public.pivotal.com/releases/plugins/ws-hq-plugin/</url>
 		</repository>
 		<snapshotRepository>
 			<id>snapshot-pivotal</id>
