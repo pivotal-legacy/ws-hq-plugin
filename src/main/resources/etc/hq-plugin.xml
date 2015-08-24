@@ -201,6 +201,9 @@
 		<plugin type="autoinventory" class="PWSServerDetector" />
 	</server>
 
+	<server name="Pivotal Web Server" version="5.5" include="5.4">
+	</server>
+
 	<server name="vFabric Web Server" version="5.2" include="5.1">
 	</server>
 
@@ -208,6 +211,9 @@
 	</server>
 
 	<server name="Pivotal Web Server" version="6.0" include="5.4">
+	</server>
+
+	<server name="Pivotal Web Server" version="6.1" include="6.0">
 	</server>
 
 	<help name="vFabric Web Server 5.1">
@@ -242,7 +248,13 @@ LoadModule bmx_vhost_module      "/opt/vmware/vfabric-web-server/httpd-2.2/modul
 	<help name="vFabric Web Server 5.3" include="vFabric Web Server 5.1">
 	</help>
 
+	<help name="Pivotal Web Server 5.5" include="Pivotal Web Server 5.4">
+	</help>
+
 	<help name="Pivotal Web Server 6.0" include="Pivotal Web Server 5.4">
+	</help>
+
+	<help name="Pivotal Web Server 6.1" include="Pivotal Web Server 6.0">
 	</help>
 
     <help name="Pivotal Web Server 5.4">
