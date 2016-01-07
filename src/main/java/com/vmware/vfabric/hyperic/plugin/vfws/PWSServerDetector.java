@@ -73,6 +73,8 @@ public class PWSServerDetector
             _ptqlQueries.add("State.Name.eq=httpd");
         }
     }
+    // for SSL, we need use real hostname to replace "localhost"
+    private String ssl_hostname = null;
 
     public List<ServerResource> getServerResources(ConfigResponse platformConfig)
         throws PluginException {
@@ -225,6 +227,8 @@ public class PWSServerDetector
             String hostname = config.getValue("hostname");
             int port = Integer.parseInt(config.getValue("port"));
             String path = DEFAULT_BMX_PATH + QUERY_BMX + VHOST_QUERY + "*";
+            // for SSL, we need use real hostname to replace "localhost"
+            hostname = checkSSLhostname(proto, hostname);
             URL bmxUrl = new URL(proto, hostname, port, path);
             BmxQuery query = new BmxQuery(bmxUrl);
             BmxResult result = query.getResult();
@@ -255,6 +259,21 @@ public class PWSServerDetector
             return null;
         }
         return services;
+    }
+
+    private String checkSSLhostname(String proto, String hostname)
+    {
+    	if("HTTPS".equals(proto.toUpperCase())) {
+  		    if(hostname == null) {
+  			    _log.debug("null hostname, change to [" + ssl_hostname + "]");
+  			    return ssl_hostname;
+  		    }
+  		    if("LOCALHOST".equals(hostname.toUpperCase())) {
+  			    _log.debug("localhost for ssl, change to [" + ssl_hostname + "]");
+  			    return ssl_hostname;
+  		    }
+  	    }
+  	    return hostname;
     }
 
     private String getInstanceName(String installPath) {
@@ -291,6 +310,13 @@ public class PWSServerDetector
             try {
                 _log.debug("Trying to make a URL from " + proto + ", " + host + ", " + port + ", " +
                            path);
+                
+                // for SSL, we need use real hostname to replace "localhost"
+                if("HTTPS".equals(proto.toUpperCase()) && "LOCALHOST".equals(host.toUpperCase())) {
+          	    	host = findHostName(installPath, filename, host);
+          	        _log.debug("Trying to find hostname for localhost: [" + host + "]");
+                }
+
                 url = new URL(proto, host, port, path);
                 BmxQuery query = new BmxQuery(url);
                 query.getResult();
@@ -301,6 +327,69 @@ public class PWSServerDetector
         }
         return url;
     }
+
+	private String findHostName(String installPath, String filename, String host) {
+		String hostname = null;
+
+		File file = new File(installPath + "/" + filename);
+		BufferedReader reader = null;
+
+		if (!file.exists()) {
+			_log.debug(file.getAbsolutePath() + " doesn't exist");
+			return host;
+		}
+		try
+		{
+			reader = new BufferedReader(new FileReader(file));
+			String line;
+			while ((line = reader.readLine()) != null) {
+				if (line.length() != 0)
+				{
+					char chr = line.charAt(0);
+					if ((chr != '#') && (chr != '<') && (!Character.isWhitespace(chr)))
+					{
+						int ix = line.indexOf('#');
+						if (ix != -1) {
+							line = line.substring(0, ix);
+						}
+						line = line.trim();
+						String[] ent = StringUtil.explodeQuoted(line);
+						if ("SERVERNAME".equals(ent[0].toUpperCase())) {
+							if (ent.length > 1)
+							{
+								line = ent[1];
+								ix = line.indexOf(':');
+								if (ix != -1) {
+									line = line.substring(0, ix);
+								}
+								line = line.trim();
+								hostname = line;
+							}
+						} else if ("INCLUDE".equals(ent[0].toUpperCase())) {
+							String hostname2 = findHostName(installPath, ent[1], null);
+							if (hostname2 != null)
+								hostname = hostname2;
+						}
+					}
+				}
+			}
+		} catch (IOException e) {
+		} finally {
+			if (reader != null) {
+				try {
+					reader.close();
+				}
+				catch (IOException e) {
+				}
+			}
+		}
+
+		if(hostname != null) {
+			ssl_hostname = hostname;
+			return hostname;
+		}
+		return host;
+	}
 
     private List<Listen> getListens(String installPath, String filename) {
         List<Listen> listens = new ArrayList<Listen>();
