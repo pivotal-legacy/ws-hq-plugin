@@ -41,7 +41,7 @@ import org.apache.commons.logging.LogFactory;
 public class PWSServerDetector
     extends DaemonDetector implements AutoServerDetector, FileServerDetector {
 
-    private static final String _logCtx = VfwsServerDetector.class.getName();
+    private static final String _logCtx = PWSServerDetector.class.getName();
     private final static Log _log = LogFactory.getLog(_logCtx);
 
     private static final String ARG_ROOTDIR = "-d";
@@ -57,7 +57,7 @@ public class PWSServerDetector
     private static final String HTTPD_CONF = "/conf/httpd.conf";
     private static final String CONF_DIRECTIVE_LISTEN = "LISTEN";
     private static final String CONF_DIRECTIVE_INCLUDE = "INCLUDE";
-    private static final String DEFAULT_WINDOWS_SERVICE_PREFIX = "Pivotalhttpd";
+    private static final String DEFAULT_WINDOWS_SERVICE_PREFIX = "httpd-WebServer";
     private static final String PROP_PROGRAM = "program";
     private static final String PROP_SERVICENAME = "service_name";
     private static final String PROP_PIDFILE = "pidfile";
@@ -146,8 +146,9 @@ public class PWSServerDetector
                     servers.add(server);
                 }
                 if (!success) {
-                    _log.error("[getServers] Found potential PWS process however was unable to determine URL of mod_bmx");
-                    _log.error("[getServers] Make sure -d is specified on command line and that proxying or redirecting isn't including /bmx");
+                	// this is not error.
+                    _log.debug("[getServers] Found potential PWS process however was unable to determine URL of mod_bmx");
+                    _log.debug("[getServers] Make sure -d is specified on command line and that proxying or redirecting isn't including /bmx");
                 }
             }
         }

@@ -1,25 +1,7 @@
 <?xml version="1.0"?>
 
-<!--
-		Hyperic plugin for vFabric/Pivotal Web Server
-		Copyright (C) 2012-2015, Pivotal Software, Inc
-
-		This program is free software; you can redistribute it and/or modify
-		it under the terms of the GNU General Public License as published by
-		the Free Software Foundation; either version 2 of the License.
-
-		This program is distributed in the hope that it will be useful,
-		but WITHOUT ANY WARRANTY; without even the implied warranty of
-		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-		GNU General Public License for more details.
-
-		You should have received a copy of the GNU General Public License along
-		with this program; if not, write to the Free Software Foundation, Inc.,
-		51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
--->
-
 <plugin package="com.vmware.vfabric.hyperic.plugin.vfws" name="vfws">
-	<property name="PLUGIN_VERSION" value="@project.version@" />
+	<property name="PLUGIN_VERSION" value="1.5" />
 
 	<classpath>
 		<include name="pdk/plugins/netservices-plugin.jar" />
@@ -214,6 +196,12 @@
 
 	</server>
 
+	<server name="vFabric Web Server" version="5.2" include="5.1">
+	</server>
+
+	<server name="vFabric Web Server" version="5.3" include="5.1">
+	</server>
+
 	<server name="Pivotal Web Server" version="5.4"
 		include="vFabric Web Server 5.1">
 		<plugin type="autoinventory" class="PWSServerDetector" />
@@ -222,16 +210,13 @@
 	<server name="Pivotal Web Server" version="5.5" include="5.4">
 	</server>
 
-	<server name="vFabric Web Server" version="5.2" include="5.1">
-	</server>
-
-	<server name="vFabric Web Server" version="5.3" include="5.1">
-	</server>
-
 	<server name="Pivotal Web Server" version="6.0" include="5.4">
 	</server>
 
 	<server name="Pivotal Web Server" version="6.1" include="6.0">
+	</server>
+
+	<server name="Pivotal Web Server" version="6.2" include="6.0">
 	</server>
 
 	<help name="vFabric Web Server 5.1">
@@ -253,9 +238,9 @@
     In addition by default mod_bmx_* modules are enabled in httpd.conf. 
     </p>
     <p>
-LoadModule bmx_module            "/opt/vmware/vfabric-web-server/httpd-2.2/modules/mod_bmx.so"<br/>
-LoadModule bmx_status_module     "/opt/vmware/vfabric-web-server/httpd-2.2/modules/mod_bmx_status.so"<br/>
-LoadModule bmx_vhost_module      "/opt/vmware/vfabric-web-server/httpd-2.2/modules/mod_bmx_vhost.so"<br/>
+LoadModule bmx_module            "/opt/vmware/vfabric-web-server/httpd-2.4/modules/mod_bmx.so"<br/>
+LoadModule bmx_status_module     "/opt/vmware/vfabric-web-server/httpd-2.4/modules/mod_bmx_status.so"<br/>
+LoadModule bmx_vhost_module      "/opt/vmware/vfabric-web-server/httpd-2.4/modules/mod_bmx_vhost.so"<br/>
     </p>
     ]]>
 	</help>
@@ -266,14 +251,6 @@ LoadModule bmx_vhost_module      "/opt/vmware/vfabric-web-server/httpd-2.2/modul
 	<help name="vFabric Web Server 5.3" include="vFabric Web Server 5.1">
 	</help>
 
-	<help name="Pivotal Web Server 5.5" include="Pivotal Web Server 5.4">
-	</help>
-
-	<help name="Pivotal Web Server 6.0" include="Pivotal Web Server 5.4">
-	</help>
-
-	<help name="Pivotal Web Server 6.1" include="Pivotal Web Server 6.0">
-	</help>
 
     <help name="Pivotal Web Server 5.4">
     <![CDATA[
@@ -294,11 +271,22 @@ LoadModule bmx_vhost_module      "/opt/vmware/vfabric-web-server/httpd-2.2/modul
     In addition by default mod_bmx_* modules are enabled in httpd.conf. 
     </p>
     <p>
-LoadModule bmx_module            "/opt/pivotal/webserver/httpd-2.2/modules/mod_bmx.so"<br/>
-LoadModule bmx_status_module     "/opt/pivotal/webserver/httpd-2.2/modules/mod_bmx_status.so"<br/>
-LoadModule bmx_vhost_module      "/opt/pivotal/webserver/httpd-2.2/modules/mod_bmx_vhost.so"<br/>
+LoadModule bmx_module            "/opt/pivotal/webserver/httpd-2.4/modules/mod_bmx.so"<br/>
+LoadModule bmx_status_module     "/opt/pivotal/webserver/httpd-2.4/modules/mod_bmx_status.so"<br/>
+LoadModule bmx_vhost_module      "/opt/pivotal/webserver/httpd-2.4/modules/mod_bmx_vhost.so"<br/>
     </p>
     ]]>
     </help>
 
+	<help name="Pivotal Web Server 5.5" include="Pivotal Web Server 5.4">
+	</help>
+
+	<help name="Pivotal Web Server 6.0" include="Pivotal Web Server 5.4">
+	</help>
+
+	<help name="Pivotal Web Server 6.1" include="Pivotal Web Server 6.0">
+	</help>
+	
+	<help name="Pivotal Web Server 6.2" include="Pivotal Web Server 6.0">
+	</help>
 </plugin>

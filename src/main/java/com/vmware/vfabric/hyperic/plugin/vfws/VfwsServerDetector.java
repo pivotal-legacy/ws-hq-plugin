@@ -118,6 +118,10 @@ public class VfwsServerDetector
                     ServerResource server = createServerResource(installPath);
                     ConfigResponse cprop = new ConfigResponse();
                     String version = getVersion((String) serverStatus.get("ServerVersion"));
+                    if(version == null) {
+                    	// avoid java.lang.NullPointerException when PivotalWebServer 
+                    	continue;
+                    }
                     if (!version.equals(getTypeInfo().getVersion())) {
                         // Version not matched
                         continue;
@@ -143,8 +147,9 @@ public class VfwsServerDetector
                     servers.add(server);
                 }
                 if (!success) {
-                    _log.error("[getServers] Found potential VFWS process however was unable to determine URL of mod_bmx");
-                    _log.error("[getServers] Make sure -d is specified on command line and that proxying or redirecting isn't including /bmx");
+                	// may not be an error.
+                    _log.debug("[getServers] Found potential VFWS process however was unable to determine URL of mod_bmx");
+                    _log.debug("[getServers] Make sure -d is specified on command line and that proxying or redirecting isn't including /bmx");
                 }
             }
         }
